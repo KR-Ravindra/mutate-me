@@ -33,6 +33,7 @@ import (
 
 var (
 	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
+	# some issue is still existent with the serialiser, doesn't return the wanted version/apiversion/kind
 )
 var config *rest.Config
 var clientSet *kubernetes.Clientset
