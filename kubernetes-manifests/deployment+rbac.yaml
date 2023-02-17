@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mutate-me
+  namespace: default
+spec:
+  selector:
+    app: mutate-me
+  ports:
+    - port: 443
+      targetPort: tls
+      name: application
+    - port: 80
+      targetPort: metrics
+      name: metrics
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mutate-me
+  namespace: default
+  labels:
+    app: mutate-me
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mutate-me
+  template:
+    metadata:
+      labels:
+        app: mutate-me
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      serviceAccountName: mutate-me
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1234
+      containers:
+      - name: server
+        image: krravindra/mutate
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8443
+          name: tls
+        - containerPort: 80
+          name: metrics
+        volumeMounts:
+        - name: webhook-tls-certs
+          mountPath: /etc/ssl/certs/
+          readOnly: true
+      volumes:
+      - name: webhook-tls-certs
+        secret:
+          secretName: mutate-me-tls
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: mutate-me
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mutate-me
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: mutate-me
+subjects:
+- kind: ServiceAccount
+  name: mutate-me
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: mutate-me
+  apiGroup: rbac.authorization.k8s.io

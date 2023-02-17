@@ -1,9 +1,9 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: mutate-me-webhook
+  name: mutate-me
 webhooks:
-  - name: mutate-me-webhook.default.svc.cluster.local
+  - name: mutate-me.default.svc.cluster.local
     admissionReviewVersions:
       - "v1beta1"
     sideEffects: "None"
@@ -13,8 +13,8 @@ webhooks:
         mutate-me-webhook-enabled: "true"
     clientConfig:
       service:
-        name: mutate-me-webhook
-        namespace: devops
+        name: mutate-me
+        namespace: default
         path: "/mutate"
       caBundle: "${CA_PEM_B64}"
     rules:
