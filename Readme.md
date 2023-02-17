@@ -22,3 +22,8 @@ You can now use your cluster with:
 kubectl cluster-info --context kind-dev-cluster
 
 Have a nice day! 👋
+```
+
+## About Go Packages 
+- Gorilla MUX
+- k8s.io/client-go
