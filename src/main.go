@@ -33,7 +33,6 @@ import (
 
 var (
 	universalDeserializer = serializer.NewCodecFactory(runtime.NewScheme()).UniversalDeserializer()
-	# some issue is still existent with the serialiser, doesn't return the wanted version/apiversion/kind
 )
 var config *rest.Config
 var clientSet *kubernetes.Clientset
@@ -165,12 +164,12 @@ func HandleMutate(w http.ResponseWriter, r *http.Request) {
 		fmt.Errorf("could not unmarshal pod on admission request: %v", err)
 	}
 
-	log.Printf("The raw pod request is ", string(admissionReviewReq.Request.Object.Raw))
+	// log.Printf("The raw pod request is ", string(admissionReviewReq.Request.Object.Raw))
 
 	var patches []patchOperation
 	labels := pod.ObjectMeta.Labels
 	labels["example-webhook"] = "it-worked"
-	log.Printf("Before Patch", patches)
+	// log.Printf("Before Patch", patches)
 	patches = append(patches, patchOperation{
 		Op:    "add",
 		Path:  "/metadata/labels",
@@ -181,7 +180,7 @@ func HandleMutate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Errorf("could not marshal JSON patch: %v", err)
 	}
-	log.Printf("Patched bytes are ", string(patchBytes))
+	// log.Printf("Patched bytes are ", string(patchBytes))
 
 	admissionReviewResponse := v1beta1.AdmissionReview{
 		Response: &v1beta1.AdmissionResponse{
@@ -192,7 +191,7 @@ func HandleMutate(w http.ResponseWriter, r *http.Request) {
 
 	admissionReviewResponse.Response.Patch = patchBytes
 
-	log.Printf("This is the response I am sending %v\n", &admissionReviewResponse)
+	// log.Printf("This is the response I am sending %v\n", &admissionReviewResponse)
 	bytes, err := json.Marshal(&admissionReviewResponse)
 	if err != nil {
 		fmt.Errorf("marshaling response: %v", err)
