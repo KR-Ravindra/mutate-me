@@ -2,9 +2,9 @@
 
 This is a mutation admission controller for kubernetes. 
 
-## the Dev environment
+## The Dev environment
 
-Use this to build a kind environment for your local testing.
+Use this to build a [kind](https://kind.sigs.k8s.io/docs/user/quick-start/) environment for your local testing.
 
 ```
 ➜  mutate-me git:(master) ✗ kind create cluster --name dev-cluster --image kindest/node:v1.23.13
