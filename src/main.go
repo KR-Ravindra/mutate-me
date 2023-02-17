@@ -106,7 +106,7 @@ func main() {
 	}
 	clientSet = cs
 	log.Info("Here is my final clientSet : ", clientSet)
-	// test()
+	test()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", HandleRoot)
@@ -164,7 +164,7 @@ func HandleMutate(w http.ResponseWriter, r *http.Request) {
 		fmt.Errorf("could not unmarshal pod on admission request: %v", err)
 	}
 
-	ioutil.WriteFile("/tmp/request", admissionReviewReq.Request.Object.Raw, 0644)
+	log.Printf("The raw pod request is ", string(admissionReviewReq.Request.Object.Raw))
 
 	var patches []patchOperation
 	labels := pod.ObjectMeta.Labels
