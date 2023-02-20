@@ -135,7 +135,7 @@ func HandleRoot(w http.ResponseWriter, r *http.Request) {
 
 func HandleMutate(w http.ResponseWriter, r *http.Request) {
 	triggeredAt := time.Now()
-	fmt.Fprintln(w, "hello again!")
+	// fmt.Fprintln(w, "hello again!")
 	body, err := ioutil.ReadAll(r.Body)
 	err = ioutil.WriteFile("/tmp/request", body, 0644)
 	if err != nil {
